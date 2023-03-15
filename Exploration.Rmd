@@ -1,0 +1,73 @@
+---
+title: "SRM Study Exploration"
+author: "Brendan McWalters"
+date: "2023-03-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## SRM Examples
+
+From Coaching Actuaries Course
+
+```{r}
+library(ggplot2)
+commute_data <- read.csv("Commute-data.csv")
+commute_test_data <- read.csv("Commute-test-data.csv")
+```
+
+```{r}
+ggplot(commute_data, aes(x=Departure, 
+                         y=Commute, 
+                         col=Temp, 
+                         size=Police,
+                         shape=Season)) + 
+  geom_point() +
+  facet_grid(rows=vars(Accident), cols=vars(Precip))
+
+```
+
+```{r}
+ggplot(commute_data, aes(x=Commute, y=as.factor(Season))) + 
+  geom_boxplot(fill="slateblue", alpha=.3,
+              outlier.colour="red",
+              outlier.fill="red",
+              outlier.size=3) +
+  ylab("Season")
+```
+
+```{r}
+ggplot(commute_data, aes(sample = Commute)) +
+  stat_qq() +
+  stat_qq_line() + facet_grid(rows = vars(Season))
+```
+
+```{r}
+model <- lm(formula=Commute ~ Precip.Chance,data=commute_data)
+summary(model)
+```
+
+```{r}
+# Format model details for graph line label.
+lm_eqn <- function(m){
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~italic(r)^2~"="~r2, 
+         list(a = format(unname(coef(m)[1]), digits = 2),
+              b = format(unname(coef(m)[2]), digits = 2),
+             r2 = format(summary(m)$r.squared, digits = 3)))
+    as.character(as.expression(eq));
+}
+
+```
+
+```{r}
+
+ggplot(commute_data, aes(x=Precip.Chance, y=Commute)) +
+  geom_point(col='blue', shape='o', size=4) +
+  stat_smooth(method = lm, col="orange", show.legend = TRUE ) +
+  geom_text(x=50,y=30, label=lm_eqn(model), parse=TRUE, col='orange')
+```
+
+
