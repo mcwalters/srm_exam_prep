@@ -71,3 +71,20 @@ ggplot(commute_data, aes(x=Precip.Chance, y=Commute)) +
 ```
 
 
+## MLR
+
+
+```{r}
+model <- lm(formula=Commute ~ Departure+Temp+Precip.Chance+Police,
+            data=commute_data)
+summary(model)
+```
+
+```{r}
+full_model <- lm(formula=Commute ~ Departure+Temp+Precip.Chance+Police,
+            data=commute_data)
+reduced_model <- lm(formula=Commute ~ Departure+Temp,
+            data=commute_data)
+anova(reduced_model, full_model)
+
+```
