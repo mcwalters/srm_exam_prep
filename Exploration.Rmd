@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 From Coaching Actuaries Course
 
 ```{r}
+library(dplyr)
+library(tidyr)
 library(ggplot2)
 commute_data <- read.csv("Commute-data.csv")
 commute_test_data <- read.csv("Commute-test-data.csv")
@@ -93,8 +95,33 @@ anova(reduced_model, full_model)
 
 ```{r}
 library(tseries) #install the package if not already
-plot.ts(Commute, xlab="Time, t", 
+plot.ts(commute_data$Commute, xlab="Time, t", 
         ylab=expression("y"["t"]), ylim=c(10,50), 
         main="Time Series Plot of Chris' Commute Durations over a 100-Day Period")
-abline(mean(Commute), 0) #mean of the distribution
+abline(mean(commute_data$Commute), 0) #mean of the distribution
 ```
+
+### Stationarity
+
+```{r}
+commute_test_data %>%
+  group_by(grp = as.integer(gl(n(), 10, n()))) %>%
+  summarise(mean=mean(Commute), sd = sd(Commute)) %>%
+  ggplot(aes(x=grp)) +
+  geom_line(aes(y=sd), col='blue')+
+  geom_line(aes(y=mean), col='red') +
+   theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6)
+    )
+```
+
+
+```{r}
+
+
+
+```
+
