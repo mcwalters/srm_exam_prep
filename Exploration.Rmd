@@ -88,3 +88,13 @@ reduced_model <- lm(formula=Commute ~ Departure+Temp,
 anova(reduced_model, full_model)
 
 ```
+
+## Time Series
+
+```{r}
+library(tseries) #install the package if not already
+plot.ts(Commute, xlab="Time, t", 
+        ylab=expression("y"["t"]), ylim=c(10,50), 
+        main="Time Series Plot of Chris' Commute Durations over a 100-Day Period")
+abline(mean(Commute), 0) #mean of the distribution
+```
